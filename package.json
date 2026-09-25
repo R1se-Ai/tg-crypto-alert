@@ -1,0 +1,41 @@
+{
+  "name": "tg-crypto-alert",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "加密货币与 TradFi 永续合约异动监控，通过 Telegram 推送告警",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "cli": "tsx cli/index.ts",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "@types/node": "^22.20.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8",
+    "wrangler": "^3.90.0"
+  },
+  "dependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.63.4"
+  },
+  "cloudflare": {
+    "bindings": {
+      "TELEGRAM_BOT_TOKEN": {
+        "description": "Telegram Bot Token，找 [@BotFather](https://t.me/BotFather) 发 `/newbot` 获得，形如 `123456:AA...`"
+      },
+      "WEBHOOK_SECRET": {
+        "description": "自定义随机串，用于校验 Telegram 回调来源。可用 `node -e \"console.log(require('crypto').randomBytes(24).toString('hex'))\"` 生成"
+      },
+      "TELEGRAM_CHAT_ID": {
+        "description": "可选。固定推送会话 ID；留空则由首个与 bot 交互的会话自动绑定"
+      },
+      "WORKER_BASE_URL": {
+        "description": "Worker 自身地址，如 `https://tg-crypto-alert.xxx.workers.dev`。首次部署后到 Dashboard 回填，或直接访问 `/setup` 让 Worker 自己发现"
+      }
+    }
+  }
+}

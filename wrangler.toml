@@ -1,0 +1,31 @@
+name = "tg-crypto-alert"
+main = "src/worker.ts"
+compatibility_date = "2026-01-01"
+
+# 账号 ID。留空时 wrangler 会让你选账号，也可用环境变量 CLOUDFLARE_ACCOUNT_ID 指定。
+# account_id = "YOUR_ACCOUNT_ID"
+
+# 每 2 分钟触发一次监控检查。
+# 更密会触发 OKX 的限流（429），窗口本身是 5m 起，2 分钟延迟可接受。
+[triggers]
+crons = ["*/2 * * * *"]
+
+[observability]
+enabled = true
+
+# Worker 自身地址，Cron 每次运行时用它自动注册/修正 Telegram Webhook。
+# 第一次 deploy 后才会拿到真实域名，回填后需要再 deploy 一次。
+[vars]
+WORKER_BASE_URL = "https://tg-crypto-alert.YOUR_SUBDOMAIN.workers.dev"
+# Binance 对本机 Cloudflare 出口节点（SJC）返回 403，故主源切为 OKX，Binance 仍作备源
+MARKET_PRIMARY = "okx"
+
+# D1 用于持久化配置（币种/阈值/开关）与告警去重记录
+[[d1_databases]]
+binding = "DB"
+database_name = "crypto-alert-db"
+database_id = "YOUR_D1_DATABASE_ID"   # 执行 d1 create 后回填
+
+# 敏感配置走 secrets，不写入代码库：
+# npx wrangler secret put TELEGRAM_BOT_TOKEN
+# npx wrangler secret put TELEGRAM_CHAT_ID

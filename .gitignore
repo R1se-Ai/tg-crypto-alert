@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+.workbuddy/
+.dev.vars
+*.log
+dist/
+.DS_Store
+.tmp/
+wrangler.local.toml
